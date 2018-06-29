@@ -73,7 +73,6 @@ namespace KronTest
             {
                 for (int j = i + 1; j < trains.Count; j++)
                 {
-
                     if (trains[i].Position.StationA == trains[j].Position.StationA && trains[i].Position.Distance == 0 && trains[j].Position.Distance == 0)
                     {
                         return true;
@@ -88,6 +87,7 @@ namespace KronTest
             return false;
         }
 
+        //Train is considered to have arrived if its StationA is equal to its StationB
         private void RemoveArrivedTrains()
         {
             for (int i = trains.Count - 1; i >= 0; i--)

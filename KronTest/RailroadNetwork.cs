@@ -5,11 +5,6 @@
         //Representing the network as matrix for simplicity.
         private int[,] connectionMatrix;
 
-        public RailroadNetwork()
-        {
-            connectionMatrix = new int[5, 5] { { 0, 0, 1, 0, 0 }, { 0, 0, 5, 4, 0 }, { 1, 5, 0, 3, 0 }, { 0, 4, 3, 0, 2 }, { 0, 0, 0, 2, 0 } };
-        }
-
         public RailroadNetwork(int stations)
         {
             connectionMatrix = new int[stations, stations];

@@ -12,7 +12,7 @@
 
             for (int i = 0; i < lines.Length - 1; i++)
             {
-                var splittedLine =lines[i + 1].Split();
+                var splittedLine = lines[i + 1].Split();
                 railroadNetwork.SetLength(int.Parse(splittedLine[0]), int.Parse(splittedLine[1]), int.Parse(splittedLine[2]));
             }
 
