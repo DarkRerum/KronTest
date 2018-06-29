@@ -34,15 +34,13 @@ namespace KronTest
         }
 
         private void Update()
-        {
-            PrintTrainsPosition();
+        {            
             if (DetectCollisions())
             {
                 throw new CollisionException();
             }            
             RemoveArrivedTrains();            
-            UpdateTrainsPosition();
-            Console.WriteLine();
+            UpdateTrainsPosition();            
         }
 
         private void UpdateTrainsPosition()
@@ -72,48 +70,19 @@ namespace KronTest
             }
         }
 
-        private TrainPosition NormalizePosition(TrainPosition position)
-        {            
-            if (position.StationA > position.StationB && position.Distance > 0)
-            {
-                TrainPosition newPosition = new TrainPosition(position.StationA, position.StationB, position.Distance);
-                var temp = newPosition.StationA;
-                newPosition.StationA = newPosition.StationB;
-                newPosition.StationB = temp;
-
-                newPosition.Distance = railroadNetwork.GetLength(newPosition.StationA, newPosition.StationB) - newPosition.Distance;
-
-                return newPosition;
-            }
-                        
-            return position;            
-        }
-
-        private bool ArePositionsSame(TrainPosition positionA, TrainPosition positionB)
-        {
-            if (positionA.StationA == positionB.StationA && positionA.Distance == 0 && positionB.Distance == 0)
-            {
-                return true;
-            }
-
-            var posA = NormalizePosition(positionA);
-            var posB = NormalizePosition(positionB);
-
-            if (posA.StationA == posB.StationA && posA.StationB == posB.StationB && posA.Distance == posB.Distance)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         private bool DetectCollisions()
         {
             for (int i = 0; i < trains.Count; i++)
             {
                 for (int j = i + 1; j < trains.Count; j++)
                 {
-                    if (ArePositionsSame(trains[i].Position, trains[j].Position))
+
+                    if (trains[i].Position.StationA == trains[j].Position.StationA && trains[i].Position.Distance == 0 && trains[j].Position.Distance == 0)
+                    {
+                        return true;
+                    }
+
+                    if (trains[i].Position.StationA == trains[j].Position.StationB && trains[i].Position.StationB == trains[j].Position.StationA)
                     {
                         return true;
                     }
@@ -130,15 +99,6 @@ namespace KronTest
                 {
                     trains.RemoveAt(i);
                 }
-            }
-        }
-
-        private void PrintTrainsPosition()
-        {
-            foreach (Train train in trains)
-            {
-                var pos = train.Position;
-                Console.WriteLine($"{train.Id}: {pos.StationA}   {pos.StationB}   {pos.Distance}");
             }
         }
     }

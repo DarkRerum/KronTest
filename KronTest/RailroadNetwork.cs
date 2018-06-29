@@ -8,6 +8,7 @@ namespace KronTest
 {
     class RailroadNetwork
     {
+        //Representing the network as matrix for simplicity.
         private int[,] connectionMatrix;
 
         public RailroadNetwork()
