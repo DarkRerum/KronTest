@@ -11,11 +11,8 @@ namespace KronTest
         static void Main(string[] args)
         {
             var sim = new RailroadSimulator();
-
-            for (int i = 0; i < 10; i++)
-            {
-                sim.Update();
-            }
+            
+            sim.Simulate();            
 
             Console.ReadKey();
         }

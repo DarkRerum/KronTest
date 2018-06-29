@@ -21,12 +21,24 @@ namespace KronTest
             railroadNetwork = new RailroadNetwork();
         }
 
-        public void Update()
+        public void Simulate()
+        {
+            while (trains.Count > 0)
+            {
+                Update();
+            }
+        }
+
+        private void Update()
         {
             PrintTrainsPosition();
-            RemoveArrivedTrains();
-            Console.WriteLine();
+            if (DetectCollisions())
+            {
+                Console.WriteLine("Collision Detected");
+            }            
+            RemoveArrivedTrains();            
             UpdateTrainsPosition();
+            Console.WriteLine();
         }
 
         private void UpdateTrainsPosition()
@@ -54,6 +66,56 @@ namespace KronTest
                     train.Position.StationAPathIndex++;
                 }
             }
+        }
+
+        private TrainPosition NormalizePosition(TrainPosition position)
+        {            
+            if (position.StationA > position.StationB && position.Distance > 0)
+            {
+                TrainPosition newPosition = new TrainPosition(position.StationA, position.StationB, position.Distance);
+                var temp = newPosition.StationA;
+                newPosition.StationA = newPosition.StationB;
+                newPosition.StationB = temp;
+
+                newPosition.Distance = railroadNetwork.GetLength(newPosition.StationA, newPosition.StationB) - newPosition.Distance;
+
+                return newPosition;
+            }
+                        
+            return position;            
+        }
+
+        private bool ArePositionsSame(TrainPosition positionA, TrainPosition positionB)
+        {
+            if (positionA.StationA == positionB.StationA && positionA.Distance == 0 && positionB.Distance == 0)
+            {
+                return true;
+            }
+
+            var posA = NormalizePosition(positionA);
+            var posB = NormalizePosition(positionB);
+
+            if (posA.StationA == posB.StationA && posA.StationB == posB.StationB && posA.Distance == posB.Distance)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool DetectCollisions()
+        {
+            for (int i = 0; i < trains.Count; i++)
+            {
+                for (int j = i + 1; j < trains.Count; j++)
+                {
+                    if (ArePositionsSame(trains[i].Position, trains[j].Position))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         private void RemoveArrivedTrains()
