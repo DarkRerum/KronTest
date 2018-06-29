@@ -10,7 +10,11 @@ namespace KronTest
     {
         static void Main(string[] args)
         {
-            var sim = new RailroadSimulator();
+            var trainSerializer = new TrainSerializer();
+            var trains = trainSerializer.DeserializeTrains("trains.txt");
+            var railroadNetworkSerializer = new RailroadNetworkSerializer();
+            var network = railroadNetworkSerializer.DeserializeNetwork("stations.txt");
+            var sim = new RailroadSimulator(trains, network);
             
             sim.Simulate();            
 

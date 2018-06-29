@@ -11,14 +11,11 @@ namespace KronTest
         private List<Train> trains;
         private RailroadNetwork railroadNetwork;
 
-        public RailroadSimulator()
+        public RailroadSimulator(List<Train> trains, RailroadNetwork network)
         {
-            trains = new List<Train>();
+            this.trains = trains;
 
-            trains.Add(new Train(0, new List<int>() { 1, 2, 0 }));
-            trains.Add(new Train(1, new List<int>() { 4, 3, 2, 0 }));
-
-            railroadNetwork = new RailroadNetwork();
+            railroadNetwork = network;            
         }
 
         public void Simulate()
