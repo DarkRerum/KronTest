@@ -22,7 +22,14 @@ namespace KronTest
         {
             while (trains.Count > 0)
             {
-                Update();
+                try
+                {
+                    Update();
+                }
+                catch (CollisionException)
+                {
+                    throw;
+                }
             }
         }
 
@@ -31,7 +38,7 @@ namespace KronTest
             PrintTrainsPosition();
             if (DetectCollisions())
             {
-                Console.WriteLine("Collision Detected");
+                throw new CollisionException();
             }            
             RemoveArrivedTrains();            
             UpdateTrainsPosition();

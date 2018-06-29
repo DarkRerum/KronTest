@@ -10,15 +10,31 @@ namespace KronTest
     {
         static void Main(string[] args)
         {
-            var trainSerializer = new TrainSerializer();
-            var trains = trainSerializer.DeserializeTrains("trains.txt");
-            var railroadNetworkSerializer = new RailroadNetworkSerializer();
-            var network = railroadNetworkSerializer.DeserializeNetwork("stations.txt");
-            var sim = new RailroadSimulator(trains, network);
-            
-            sim.Simulate();            
+            var trainSerializer = new TrainSerializer();            
+            var railroadNetworkSerializer = new RailroadNetworkSerializer();                        
+            var files = System.IO.Directory.EnumerateFiles(args[0], "stations*.txt");
 
-            Console.ReadKey();
+            foreach (var stationFilename in files)
+            {
+                var trainFilename = stationFilename.Replace("stations", "trains");
+                var trains = trainSerializer.DeserializeTrains(trainFilename);
+                var network = railroadNetworkSerializer.DeserializeNetwork(stationFilename);
+                var sim = new RailroadSimulator(trains, network);
+
+                Console.WriteLine($"Checking {stationFilename} and {trainFilename}");
+
+                try
+                {
+                    sim.Simulate();
+                }
+                catch (CollisionException e)
+                {
+                    Console.WriteLine("Collision");
+                    continue;
+                }
+
+                Console.WriteLine("No collision");
+            }            
         }
     }
 }
