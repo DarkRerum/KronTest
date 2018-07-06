@@ -2,7 +2,7 @@
 {
     class RailroadNetworkSerializer
     {        
-        public RailroadNetwork DeserializeNetwork(string path)
+        public static RailroadNetwork DeserializeNetwork(string path)
         {
             var lines = System.IO.File.ReadAllLines(path);
 

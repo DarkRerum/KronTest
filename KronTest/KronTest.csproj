@@ -49,7 +49,6 @@
     <Compile Include="RailroadNetworkSerializer.cs" />
     <Compile Include="RailroadSimulator.cs" />
     <Compile Include="Train.cs" />
-    <Compile Include="TrainPosition.cs" />
     <Compile Include="TrainSerializer.cs" />
   </ItemGroup>
   <ItemGroup>

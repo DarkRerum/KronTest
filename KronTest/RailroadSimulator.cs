@@ -12,30 +12,31 @@ namespace KronTest
         {
             this.trains = trains;
 
-            railroadNetwork = network;            
+            railroadNetwork = network;   
+            
+            foreach (var item in this.trains)
+            {
+                List<int> stationDistances = new List<int>();
+                for (int i = 0; i < item.Path.Count - 1; i++)
+                {
+                    stationDistances.Add(railroadNetwork.GetLength(item.Path[i], item.Path[i+1]));
+                }
+
+                item.StationDistances = stationDistances;
+            }
         }
 
         public void Simulate()
         {
             while (trains.Count > 0)
             {
-                try
-                {
-                    Update();
-                }
-                catch (CollisionException)
-                {
-                    throw;
-                }
+                Update();                
             }
         }
 
         private void Update()
         {            
-            if (DetectCollisions())
-            {
-                throw new CollisionException();
-            }            
+            DetectCollisions();            
             RemoveArrivedTrains();            
             UpdateTrainsPosition();            
         }
@@ -44,47 +45,27 @@ namespace KronTest
         {
             foreach (Train train in trains)
             {
-                var pos = train.Position;
-                if (pos.Distance != railroadNetwork.GetLength(pos.StationA, pos.StationB) - 1)
-                {
-                    train.Position.Distance++;
-                }
-                else
-                {
-                    var currentStationIndex = train.Position.StationAPathIndex + 1;
-                    train.Position.StationA = train.Path[currentStationIndex];
-                    try
-                    {
-                        train.Position.StationB = train.Path[currentStationIndex + 1];
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        train.Position.StationB = train.Position.StationA;
-                    }
-                    train.Position.Distance = 0;
-                    train.Position.StationAPathIndex++;
-                }
+                train.UpdatePosition();
             }
         }
 
-        private bool DetectCollisions()
+        private void DetectCollisions()
         {
             for (int i = 0; i < trains.Count; i++)
             {
                 for (int j = i + 1; j < trains.Count; j++)
                 {
-                    if (trains[i].Position.StationA == trains[j].Position.StationA && trains[i].Position.Distance == 0 && trains[j].Position.Distance == 0)
+                    if (trains[i].StationA == trains[j].StationA && trains[i].CurrentDistance == 0 && trains[j].CurrentDistance == 0)
                     {
-                        return true;
+                        throw new CollisionException();
                     }
 
-                    if (trains[i].Position.StationA == trains[j].Position.StationB && trains[i].Position.StationB == trains[j].Position.StationA)
+                    if (trains[i].StationA == trains[j].StationB && trains[i].StationB == trains[j].StationA)
                     {
-                        return true;
+                        throw new CollisionException();
                     }
                 }
-            }
-            return false;
+            }            
         }
 
         //Train is considered to have arrived if its StationA is equal to its StationB
@@ -92,7 +73,7 @@ namespace KronTest
         {
             for (int i = trains.Count - 1; i >= 0; i--)
             {
-                if (trains[i].Position.StationA == trains[i].Position.StationB)
+                if (trains[i].StationA == trains[i].StationB)
                 {
                     trains.RemoveAt(i);
                 }
