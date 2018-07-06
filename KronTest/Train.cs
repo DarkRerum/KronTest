@@ -3,8 +3,7 @@
 namespace KronTest
 {
     class Train
-    {        
-        //public TrainPosition Position { get; private set; }
+    {                
         public List<int> Path { get; private set; }
         public int StationA { get; private set; }
         public int StationB { get; private set; }
